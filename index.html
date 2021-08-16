@@ -164,11 +164,18 @@
                      'type': 'spinToStop',
                      'duration':4,
                      'spins': 15,
-			 'callbackSound' : playSound,    // Specify function to call when sound is to be triggered
-					 'callbackFinished': 'Mensaje()',
+		     'callbackSound' : playSound,    // Specify function to call when sound is to be triggered
+		     'soundTrigger'     : 'pin'        // Specify pins are to trigger the sound, the other option is 'segment'.
+		     'callbackFinished': 'Mensaje()',
                      'callbackAfter': 'DibujarTriangulo()' 
 					 
-                 } 
+                 },
+		    'pins' :				// Turn pins on.
+                {
+                    'number'     : 11,
+                    'fillStyle'  : 'silver',
+                    'outerRadius': 4,
+                }
 				
              });
 		    let audio1 = new Audio('tick.mp3');  // Create audio object and load desired file.
