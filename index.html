@@ -1,231 +1,40 @@
-
-<!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>La Ruleta Essen</title>
-    <script src="js/Winwheel.min.js"></script>
-
-<script src="js/TweenMax.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
-    <link rel="stylesheet" href="css/bootstrap.min.css"/>
-    <script src="js/sweetalert.min.js"></script>
-    <link href="css/sweetalert.css" rel="stylesheet" />
-    
-  <meta property="og:url"                content="https://oscaruhp.github.io/Laruleta/" />
-<meta property="og:type"               content="article" />
-<meta property="og:title"              content="La ruleta (Rifa cosas)" />
-<meta property="og:description"        content="Con esta ruleta online puedes rifar lo que gustes, solo llena la lista y genera tu ruleta" />
-<meta property="og:image"              content="http://www.itsfelipeh.com/ruletaessen/img/essen.png" />
-
-</head>
-<body>
-    <form id="form1" runat="server">
-
-    <div>
-        <style>
-         #canvasContainer {
-            background-image: url(img/Muerte-1.png);
-            background-repeat: no-repeat;  
-            background-position: center;   
-            width: 700px;                  
-            height: 700px;
-			cursor:pointer;
-		
+<canvas id='canvas' width='440' height='300'>
+    Canvas not supported, use another browser.
+</canvas>
+<script>
+    let theWheel = new Winwheel({
+        'numSegments' : 4,
+        'segments'    :
+        [
+            {'fillStyle' : '#eae56f', 'text' : 'Segment 1'},
+            {'fillStyle' : '#89f26e', 'text' : 'Segment 2'},
+            {'fillStyle' : '#7de6ef', 'text' : 'Segment 3'},
+            {'fillStyle' : '#e7706f', 'text' : 'Segment 4'}
+        ],
+        'animation' :
+        {
+            'type'             : 'spinToStop',
+            'duration'         : 6.4,
+            'spins'            : 6,
+            'callbackFinished' : stopSound
         }
-
-        </style>
-
-        <div class="container-fluid">
-
-            <div class="row">
-                <div class="col-3 text-center">  
-				<h1>La Ruleta Essen</h1>
-                    <br />
-                       <a href="http://itsfelipeh.com/" rel="home">
-                          <img width="130px" src="http://www.itsfelipeh.com/ruletaessen/img/essen.png">
-                    </a>
-                     <br />
-                    <br />
-                    <div class="card bg-warning">
-  <div class="card-body">
-  
-                  <h4 class="card-title">Lista:</h4>  
-                    
-                    <textarea id="ListaElementos" class="form-control" rows="13">
-1.-Felipe Haller
-2.-Carmen Oyarzún
-5.-Ivonne Jara
-6.-Barbara Bravo
-7.-Nancy Añazco
-8.-Carmen Oyarzún
-9.-Juan Carlos Haller
-10.-Felipe Haller
-13.-Carlos Bravo
-14.-Carolina Navarro			   
-15.-Denis Sanhueza			    
-19.-Jessica López			    			    
-21.-Marcela Sandoval			    			    
-24.-Barbara Bravo			    			    
-28.-Gerardo Muñoz
-30.-Tamara Bravo
-	  </textarea>
-<br />
-                    <input type="button" onclick="leerElementos()" class="btn btn-danger btn-lg btn-block" value="Generar Ruleta"/><br />
-      </div></div>
-      
-                </div>
-                <div class="col-7 text-center">
-				<br/>
-                     <input id="bigButton" class="btn-block btn-lg btn btn-success " onclick="objRuleta.startAnimation(); this.disabled=true;" value="Girar" type="button"/>
-                      <div id="canvasContainer" onclick="objRuleta.startAnimation();bigButton.disabled = true;">
-     <canvas id='Ruleta' width='700' height='690'>
-         
-            Canvas not supported, use another browser.
-        </canvas> 
-        
-            </div>
-                </div>
-                <div class="col-2">
-                    				<br/>
-
-
-                </div>
-            </div>
-      
-
-            </div>
-
-     <script>
-         var objRuleta;
-         var winningSegment;
-         var distnaciaX = 150;
-         var distnaciaY = 50;
-         var ctx ;
-         function Mensaje() {
-             winningSegment = objRuleta.getIndicatedSegment();
-			 SonidoFinal();
-             swal({
-                 title: " ¡ "+winningSegment.text+" !",
-               
-                 imageUrl: "img/Muerte-1.png",
-                 showCancelButton: true,
-                 confirmButtonColor: "#e74c3c",
-                 confirmButtonText: "Ok,Reiniciar",
-                 cancelButtonText: "Quitar Persona",
-                 closeOnConfirm: true,
-                 closeOnCancel: true
-             },
-      function (isConfirm) {
-          if (isConfirm) {
-             
-          } else {
-
-              $('#ListaElementos').val($('#ListaElementos').val().replace(winningSegment.text,""));
-              leerElementos();
-              
-          }
-          objRuleta.stopAnimation(false);
-          objRuleta.rotationAngle = 0;
-          objRuleta.draw();
-          DibujarTriangulo();
-          bigButton.disabled = false;
-      });
-
-      }
-
-         function DibujarTriangulo() {
-             distnaciaX = 150;
-             distnaciaY = 50;
-             ctx = objRuleta.ctx;
-             ctx.strokeStyle = 'navy';
-             ctx.fillStyle = '#000000';
-             ctx.lineWidth = 2;
-             ctx.beginPath();
-             ctx.moveTo(distnaciaX + 170, distnaciaY + 5);
-             ctx.lineTo(distnaciaX + 230, distnaciaY + 5);
-             ctx.lineTo(distnaciaX + 200, distnaciaY + 40);
-             ctx.lineTo(distnaciaX + 171, distnaciaY + 5);
-             ctx.stroke();
-             ctx.fill();
-         }
-
-         function DibujarRuleta(ArregloElementos) {
-             
-               objRuleta = new Winwheel({
-                 'canvasId': 'Ruleta',
-                 'numSegments': ArregloElementos.length,
-                 'outerRadius': 270,
-                 'innerRadius': 70,
-		 'textFontSize'    : 16,
-		 'textAlignment'   : 'center',    // Align text to outside of wheel.
-                 'segments':ArregloElementos,
-                 'animation':
-                 {
-                     'type': 'spinToStop',
-                     'duration':10	,
-                     'spins': 5,
-		     'callbackSound' : playSound,    // Specify function to call when sound is to be triggered
-		     'soundTrigger'     : 'pin',      // Specify pins are to trigger the sound, the other option is 'segment'.
-		     'callbackFinished': 'Mensaje()',
-                     'callbackAfter': 'DibujarTriangulo()' 
-					 
-                 },
-		    'pins' :				// Turn pins on.
-                {
-                    'number'     :ArregloElementos.length,
-                    'fillStyle'  : 'silver',
-                    'outerRadius': 4,
-                }
-				
-             });
-		    let audio1 = new Audio('tick.mp3');  // Create audio object and load desired file.
+    });
  
-    function playSound()
+    let audio = new Audio('kids-music.mp3');  // Create audio object and load desired file.
+ 
+    // Function called by the Spin button onClick.
+    function startSpin()
     {
-        // Stop and rewind the sound (stops it if already playing).
-        audio1.pause();
-        audio1.currentTime = 0;
- 
-        // Play the sound.
-        audio1.play();
+        // Play the sound and begin the animation of the wheel.
+        audio.play();
+        theWheel.startAnimation();
     }
-    
-               DibujarTriangulo();
-	  }
-	
-     
-	     
-	     
-	
-        function leerElementos() {
-                  txtListaElementos=$('#ListaElementos').val().trim();
-                  var Elementos = txtListaElementos.split('\n');
-                  var ElementosRuleta= [];
-	          Elementos.forEach(function (Elemento) {
-                      if(Elemento){
-                      ElementosRuleta.push({ 'fillStyle': "#" + ((1 << 24) * Math.random() | 0).toString(16), 'text': Elemento });
-                  }
-                  });
-                  DibujarRuleta(ElementosRuleta);
-	     } 
-         leerElementos();
-		  var audio2 = new Audio('alarma.mp3');  // Create audio object and load desired file.
-		function SonidoFinal()
-			{
-				audio2.pause();
-				audio2.currentTime = 0;
-				audio2.play();
-			}
  
+    // Called when the animation has finished.
+    function stopSound()
+    {
+        // Stop and rewind the sound (stops it if still playing).
+        audio.pause();
+        audio.currentTime = 0;
+    }
 </script>
-    </div>
-    </form>
-
-
-
-
-
-</body>
-</html>
