@@ -172,6 +172,7 @@
                      'type': 'spinToStop',
                      'duration':4,
                      'spins': 15,
+			 'callbackSound' : playSound,    // Specify function to call when sound is to be triggered
 					 'callbackFinished': 'Mensaje()',
                      'callbackAfter': 'DibujarTriangulo()' 
 					 
@@ -181,6 +182,21 @@
     
                DibujarTriangulo();
 	  }
+	
+    let audio1 = new Audio('tick.mp3');  // Create audio object and load desired file.
+ 
+    function playSound()
+    {
+        // Stop and rewind the sound (stops it if already playing).
+        audio1.pause();
+        audio1.currentTime = 0;
+ 
+        // Play the sound.
+        audio1.play();
+    }     
+	     
+	     
+	
         function leerElementos() {
                   txtListaElementos=$('#ListaElementos').val().trim();
                   var Elementos = txtListaElementos.split('\n');
